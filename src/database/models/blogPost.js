@@ -1,13 +1,16 @@
-'use strict';
-
-const BlogPost = (sequelize, DataTypes) => {
-  const BlogPost = sequelize.define('BlogPost', {
-    id: DataTypes.STRING,
+const BlogPost = (Sequelize, DataTypes) => {
+  const BlogPost = Sequelize.define('BlogPost', {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     title: DataTypes.STRING,
     content: DataTypes.STRING,
-    userId: { type: DataTypes.INTEGER, foreignKey: true },
+    userId: DataTypes.INTEGER,
     published: DataTypes.DATE,
-    updated: DataTypes.DATE
+    updated: DataTypes.DATE,
   }, {
     underscored: true,
     timestamps: false,
@@ -15,9 +18,10 @@ const BlogPost = (sequelize, DataTypes) => {
   });
 
   BlogPost.associate = (models) => {
-    BlogPost.belongsTo(models.User,
-    { foreignKey: 'userId', as: 'users' });
-  };
+    BlogPost.belongsTo(models.User, {
+      foreignKey: 'id', as: 'user'
+    });
+  }
 
   return BlogPost;
 };
