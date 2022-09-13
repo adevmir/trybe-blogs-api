@@ -22,4 +22,17 @@ router.post('/', async (req, res) => {
   return res.status(code).json(data);
 });
 
+router.get('/', async (req, res, _next) => {
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: 'Token not found' });
+
+  try {
+    tokenHelper.tokenVerify(authorization);
+    const result = await categoryService.findAll();
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(401).json({ message: 'Expired or invalid token' });
+  }
+});
+
 module.exports = router;

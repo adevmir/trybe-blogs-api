@@ -7,4 +7,9 @@ const create = async (category) => {
     return { code: 201, data: newCategory };
 };
 
-module.exports = { create };
+const findAll = async () => {
+    const result = await Category.findAll({ attributes: ['id', 'name'] });
+    return result;
+};
+
+module.exports = { create, findAll };
