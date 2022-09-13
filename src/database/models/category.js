@@ -8,7 +8,6 @@ const Category = (Sequelize, DataTypes) => {
     },
     name: DataTypes.STRING,
   }, {
-    underscored: true,
     timestamps: false,
     tableName: 'Categories'
   })

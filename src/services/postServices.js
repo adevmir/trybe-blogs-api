@@ -28,7 +28,7 @@ const findAll = async () => {
 };
 
 const findById = async (id) => {
-    const result = await User.findByPk(id, { include: [
+    const result = await BlogPost.findByPk(id, { include: [
         {
             model: User,
             as: 'user',
@@ -41,10 +41,11 @@ const findById = async (id) => {
         },
     ],
     });
+    console.log(result);
     if (!result) {
-        return { code: 404, message: 'Post does not exist' }; 
+        return { code: 404, message: 'Post does not exist', post: null }; 
     }
-    return { code: 200, user: result };
+    return { code: 200, post: result };
 };
 
 module.exports = { create, findAll, findById };
