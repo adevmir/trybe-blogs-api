@@ -1,5 +1,6 @@
 const express = require('express');
 const userService = require('../services/userServices');
+const tokenHelper = require('../helpers/tokenHelper');
 
 const router = express.Router();
 
@@ -12,11 +13,15 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/', async (req, res, _next) => {
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: 'Token not found' });
+
   try {
+    tokenHelper.tokenVerify(authorization);
     const result = await userService.findAll();
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ message: 'Algo deu errado' });
+    res.status(401).json({ message: 'Expired or invalid token' });
   }
 });
 
