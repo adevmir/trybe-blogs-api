@@ -11,9 +11,14 @@ const create = async (user) => {
   
     const newUser = await User.create(user);
   
-    const token = tokenHelper.generateToken(newUser.email);
+    const token = tokenHelper.tokenGenerate(newUser.email);
   
     return { code: 201, data: token };
 };
 
-module.exports = { create };
+const findAll = async () => {
+    const result = await User.findAll({ attributes: { exclude: ['password'] } });
+    return result;
+};
+
+module.exports = { create, findAll };
