@@ -42,4 +42,20 @@ router.get('/:id', async (req, res, _next) => {
   }
 });
 
+router.delete('/me', async (req, res) => {
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: 'Token not found' });
+
+  try {
+    const token = tokenHelper.tokenVerify(authorization);
+
+    const { code } = await userService.deletEmail(token);
+    console.log(code);
+    
+    return res.status(code);
+  } catch (error) {
+    res.status(401).json({ message: 'Expired or invalid token' });
+  }
+});
+
 module.exports = router;
