@@ -14,12 +14,12 @@ router.post('/', async (req, res) => {
   
   try {
     tokenHelper.tokenVerify(authorization);
+    const { code, data } = await categoryService.create({ name });
+    
+    return res.status(code).json(data);
   } catch (err) {
     res.status(401).json({ message: 'Expired or invalid token' });
   }
-  const { code, data } = await categoryService.create({ name });
-  
-  return res.status(code).json(data);
 });
 
 router.get('/', async (req, res, _next) => {
