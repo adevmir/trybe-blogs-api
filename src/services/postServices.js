@@ -1,5 +1,6 @@
-const { Op } = require('sequelize');
-const { BlogPost, User, Category } = require('../database/models');
+// const jwt = require('jsonwebtoken');
+const { BlogPost, User, Category, PostCategory } = require('../database/models');
+const categoryService = require('./categoryService');
 
 const findAll = async () => {
     const result = await BlogPost.findAll({ include: [
@@ -40,20 +41,32 @@ const findById = async (id) => {
     return { code: 200, post: result };
 };
 
-const find = async (q) => {
-    const data = await BlogPost.findAll({
-        include: [
-          { model: User, as: 'user', attributes: { exclude: ['password'] } },
-          { model: Category, as: 'categories', through: { attributes: [] } },
-        ],
-        where: {
-          [Op.or]: [
-            { title: { [Op.like]: `%${q}%` } },
-            { content: { [Op.like]: `%${q}%` } },
-          ],
-        },
-      });
-      return data;
+  const categoryVerify = (categoryIds) => {
+    const id = JSON.stringify(categoryService.findAllIds());
+    const a = id.length;
+    console.log('categories', categoryIds[0], a);
+    for (let i = 0; i < categoryIds.length - 1; i += 1) {
+      if (categoryIds[i] > a) return false;
+    }
+    return true;
+  };
+
+const create = async (title, content, categoryIds, date) => {
+  const { email } = date;
+  const cVerify = await categoryVerify(categoryIds);
+  if (cVerify === false) return { code: 400, createdPost: 0, message: '"categoryIds" not found' };
+  const { id } = await User.findOne(
+    { where: { email } },
+    );
+    console.log('ID DO USUARIO', id);
+  const result = await BlogPost.create({ title, content, userId: id });
+  console.log(result);
+
+  const postId = result.dataValues.id;
+   console.log(id);
+    await PostCategory.bulkCreate(categoryIds
+      .map((categoryId) => ({ postId, categoryId })), { validate: true });
+  return { code: 201, newPost: result };
 };
 
-module.exports = { findAll, findById, find };
+module.exports = { create, findAll, findById };

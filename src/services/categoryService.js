@@ -12,4 +12,9 @@ const findAll = async () => {
     return result;
 };
 
-module.exports = { create, findAll };
+const findAllIds = async () => {
+    const result = await Category.findAll({ attributes: ['id'] });
+    return result;
+};
+
+module.exports = { create, findAll, findAllIds };

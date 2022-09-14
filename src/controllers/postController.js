@@ -35,10 +35,20 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.get('/search', async (req, res) => {
-  const { q } = req.query;
-  const data = await postService.find(q);
-  res.status(200).json(data);
+router.post('/', async (req, res) => {
+  const { title, content, categoryIds } = req.body;
+  console.log({ title, content, categoryIds });
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: 'Token not found' });
+  try {
+    const date = tokenHelper.tokenVerify(authorization);
+    const { code, createdPost, message } = await postService
+    .create(title, content, categoryIds, date);
+    if (createdPost === 0) return res.status(code).json({ message });
+    return res.status(code).json(createdPost);
+  } catch (error) {
+    res.status(401).json({ message: 'Expired or invalid token' });
+  }
 });
 
 module.exports = router;

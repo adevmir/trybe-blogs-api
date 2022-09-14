@@ -29,15 +29,14 @@ const findById = async (id) => {
     return { code: 200, user: result };
 };
 
-// const deletEmail = async (email) => {
-//     const user = await User.findOne(
-//       { where: { email } },
-//     );
-//     await User.destroy(user);
-// };
-
-    const deletEmail = async (email) => {
-      await User.destroy({ where: { email } });
+    const deletEmail = async (token) => {
+        const { email } = token;
+        console.log(email);
+        const { id } = await User.findOne({ where: { email } });
+        console.log('userId', id);
+        const d = await User.destroy({ where: { id } });
+        return d;
+      // await User.destroy({ where: { id } });
     };
 
 module.exports = { create, findAll, findById, deletEmail };

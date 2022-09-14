@@ -48,7 +48,8 @@ router.delete('/me', async (req, res) => {
 
   try {
     const token = await tokenHelper.tokenVerify(authorization);
-    await userService.deletEmail(token.email);
+    const a = await userService.deletEmail(token);
+    console.log(a);
     
     return res.sendStatus(204);
   } catch (error) {
