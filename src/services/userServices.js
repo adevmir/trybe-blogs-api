@@ -29,20 +29,9 @@ const findById = async (id) => {
     return { code: 200, user: result };
 };
 
-// const findUser = async (token) => {
-//     const { email } = token;
-//     const result = await User.findOne({ attributes: ['id'], where: { email } });
-//     if (!result) {
-//         return { code: 404, message: 'User does not exist' }; 
-//     }
-//     await console.log('abulabdab', result.dataValues);
-// };
-
-const deletEmail = async (token) => {
-    console.log('kappa', token.email);
-    const result = await User.destroy({ where: { email: token.email } });
-    console.log(result);
-    return { code: 204 };
+const deletEmail = async (email) => {
+    console.log(email);
+    // await User.destroy({ where: { email } });
 };
 
 module.exports = { create, findAll, findById, deletEmail };

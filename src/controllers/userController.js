@@ -47,12 +47,10 @@ router.delete('/me', async (req, res) => {
   if (!authorization) return res.status(401).json({ message: 'Token not found' });
 
   try {
-    const token = tokenHelper.tokenVerify(authorization);
-
-    const { code } = await userService.deletEmail(token);
-    console.log(code);
+    const token = await tokenHelper.tokenVerify(authorization);
+    await userService.deletEmail(token.email);
     
-    return res.status(code);
+    return res.sendStatus(204);
   } catch (error) {
     res.status(401).json({ message: 'Expired or invalid token' });
   }
