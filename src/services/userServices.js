@@ -29,9 +29,15 @@ const findById = async (id) => {
     return { code: 200, user: result };
 };
 
-const deletEmail = async (email) => {
-    console.log(email);
-    // await User.destroy({ where: { email } });
-};
+// const deletEmail = async (email) => {
+//     const user = await User.findOne(
+//       { where: { email } },
+//     );
+//     await User.destroy(user);
+// };
+
+    const deletEmail = async (email) => {
+      await User.destroy({ where: { email } });
+    };
 
 module.exports = { create, findAll, findById, deletEmail };

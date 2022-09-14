@@ -35,4 +35,10 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.get('/search', async (req, res) => {
+  const { q } = req.query;
+  const data = await postService.find(q);
+  res.status(200).json(data);
+});
+
 module.exports = router;
